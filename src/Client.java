@@ -28,22 +28,21 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 public class Client extends JFrame implements ActionListener{
+	/**
+	 * Client class for server interlocutor 
+	 */
 	
+	// initialize variables and objects
 	static JPanel p1;
 	JTextField text;
 	JButton button;
 	static JPanel area;
     static JFrame f1 = new JFrame();
-    
     static Box vertical = Box.createVerticalBox();
-
 	static Socket s;
-	
 	static DataInputStream din;
 	static DataOutputStream dout;
-	
 	Boolean typing;
-	
 	static ImageIcon clientIcon;
 	static ImageIcon clientDP;
 	
@@ -124,16 +123,20 @@ public class Client extends JFrame implements ActionListener{
 		label7.setBounds(410, 23, 13, 25);
 		p1.add(label7);
 		
+		
+		// action when video icon is clicked
 		label5.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new ExceptionGUI(f1.getLocation());
 			}
 		});
+		// action when phone icon is clicked
 		label6.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new ExceptionGUI(f1.getLocation());
 			}
 		});
+		// action when 3 dots icon is clicked
 		label7.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new ExceptionGUI(f1.getLocation());
@@ -206,31 +209,37 @@ public class Client extends JFrame implements ActionListener{
 		f1.setLayout(null);
 		f1.setSize(465, 750);
 		f1.setLocation(1000, 50);
-//		f1.setUndecorated(true);
 		f1.setVisible(true);
 	}
-
+	
+	// function to perform mouse on click
 	@Override
 	public void actionPerformed(ActionEvent ae){
 		// TODO Auto-generated method stub
 		try {
 			String out = text.getText();
+			// if the string on text label is not empty
 			if(!out.isEmpty()) {
 				
+				// GUI for client chat box
 				JPanel p2 = formatLabel(out);
-				text.setText("");
-				
+				text.setText("");	
 				area.setLayout(new BorderLayout());
-				 
 				JPanel right = new JPanel(new BorderLayout());
+				
+				//So the messages appear at the right side of the screen
 	            right.add(p2, BorderLayout.LINE_END);
 	            vertical.add(right);
+	            //Add a small space between the messages
 	            vertical.add(Box.createVerticalStrut(15));
 	            
 	            area.add(vertical, BorderLayout.PAGE_START);
+	            
+	            // refresh the GUI
 	            f1.revalidate();
-				
-				dout.writeUTF(out);
+	            
+	            //Write the message at the dataOutputStream
+				dout.writeUTF(out); 
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -238,20 +247,24 @@ public class Client extends JFrame implements ActionListener{
 		}
 	}
 	
+	// function to generate client format text
 	public static JPanel formatLabel(String out){
+		// new panel for chat box
 		JPanel p3 = new JPanel();
+		
+		// panel attribute displayed vertically
 		p3.setLayout(new BoxLayout(p3, BoxLayout.Y_AXIS));
 		        
+		// make the label in which the messages will appear
 		JLabel l1 = new JLabel("<html><p style = \"width : 150px\">"+out+"</p></html>");
-
 		l1.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		l1.setBackground(new Color(37, 211, 102));
 		l1.setOpaque(true);
 		l1.setBorder(new EmptyBorder(15,15,15,50));
 		        
+		// time when message send 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		        
 		JLabel l2 = new JLabel();
 		l2.setText(sdf.format(cal.getTime()));
 		        
@@ -260,22 +273,28 @@ public class Client extends JFrame implements ActionListener{
 		return p3;
 	}
 	
+	// function to generate server format text
 	public static JPanel serverFormatLabel(String out, ImageIcon icon, ImageIcon dp){
-		JPanel p4 = formatLabel(out); //Make a new panel for the message
+		// make a new panel for the message
 		JPanel p5 = new JPanel();
+		JPanel p4 = formatLabel(out); 
+		
+		// panel attribute displayed vertically 
         p5.setLayout(new BoxLayout(p5, BoxLayout.Y_AXIS));
         
+        // add image above the chat box 
 		JLabel labelServerImg = new JLabel(icon); 
 		
+		// action when the image clicked
 		labelServerImg.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new DisplayPictureGUI(dp, f1.getLocation(), p1.getBackground());
 			}
 		});
 		
+		// add all panel to chat box panel
         p5.add(labelServerImg);
         p5.add(p4);
-        
         return p5;
     }
 
@@ -286,7 +305,7 @@ public class Client extends JFrame implements ActionListener{
 		Server sImg = new Server("");
 		
 		try {
-			s = new Socket("127.0.0.1", 1000); //Make a new connection with the server
+			s = new Socket("127.0.0.1", 1000); // make a new connection with the server
 			
 			din = new DataInputStream(s.getInputStream());
 			dout = new DataOutputStream(s.getOutputStream());
@@ -298,6 +317,7 @@ public class Client extends JFrame implements ActionListener{
 				
 				msgin = din.readUTF();
 				
+				// GUI for the server chat box 
 				JPanel p2 = serverFormatLabel(msgin, sImg.getServerIcon(), sImg.getServerDP());
                 JPanel left = new JPanel(new BorderLayout());
                 left.add(p2, BorderLayout.LINE_START);
@@ -307,12 +327,12 @@ public class Client extends JFrame implements ActionListener{
                 area.add(vertical, BorderLayout.PAGE_START);
                 
 	            try {
-					Thread.sleep(1000);//Sleep for 1000 milliseconds => 1 second
+					Thread.sleep(1000);// sleep for 1000 milliseconds => 1 second
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-                //After a second passes, then show the message to the Server
+                // fter a second passes, then show the message to the Server
                 f1.validate();    
 			}
 		}catch(Exception e) {

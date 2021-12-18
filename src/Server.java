@@ -29,7 +29,10 @@ import javax.swing.Timer;
 import javax.swing.border.EmptyBorder;
 
 public class Server extends JFrame implements ActionListener{
-
+	/**
+	 * Server class for client interlocutor 
+	 */
+	
 	static JPanel p1;
 	JTextField text;
 	JButton button;
@@ -126,16 +129,19 @@ public class Server extends JFrame implements ActionListener{
 		label7.setBounds(410, 23, 13, 25);
 		p1.add(label7);
 		
+		// action when video icon is clicked
 		label5.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new ExceptionGUI(f1.getLocation());
 			}
 		});
+		// action when phone icon is clicked
 		label6.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new ExceptionGUI(f1.getLocation());
 			}
 		});
+		// action when 3 dots icon is clicked
 		label7.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new ExceptionGUI(f1.getLocation());
@@ -217,7 +223,6 @@ public class Server extends JFrame implements ActionListener{
 		f1.setLayout(null);
 		f1.setSize(465, 750);
 		f1.setLocation(300, 50);
-//		f1.setUndecorated(true);
 		f1.setVisible(true);
 	}
 	
@@ -226,23 +231,28 @@ public class Server extends JFrame implements ActionListener{
 		// TODO Auto-generated method stub
 		try {
 			String out = text.getText();
+			// if the string on text label is not empty
 			if(!out.isEmpty()) {
-				
+				// GUI for server chat box
 				JPanel p2 = formatLabel(out);
 				text.setText("");//Empty the text box
 				
 				area.setLayout(new BorderLayout());
 				 
 				JPanel right = new JPanel(new BorderLayout());
-	            right.add(p2, BorderLayout.LINE_END);//So the messages appear at the right side of the screen
-	            vertical.add(right);
-	            vertical.add(Box.createVerticalStrut(15));//Add a small space between the messages
+				// so the messages appear at the right side of the screen
+				right.add(p2, BorderLayout.LINE_END);
+				vertical.add(right);
+				// add a small space between the messages
+	            vertical.add(Box.createVerticalStrut(15));
 	            
 	            area.add(vertical, BorderLayout.PAGE_START);
 	            
+	            // refresh the GUI
 	            f1.revalidate();
-
-				dout.writeUTF(out);//Write the message at the dataOutputStream
+	            
+	            // write the message at the dataOutputStream
+				dout.writeUTF(out);
 			}			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -250,18 +260,22 @@ public class Server extends JFrame implements ActionListener{
 		}
     }
 	
+	// function to generate server format text
 	public static JPanel formatLabel(String out){
+		// new panel for chat box
 		JPanel p3 = new JPanel();
+		
+		// panel attribute displayed vertically
         p3.setLayout(new BoxLayout(p3, BoxLayout.Y_AXIS));
         
-        //Make the label in which the messages will appear
+        // make the label in which the messages will appear
         JLabel l1 = new JLabel("<html><p style = \"width : 150px\">"+out+"</p></html>");
         l1.setFont(new Font("Tahoma", Font.PLAIN, 16));
         l1.setBackground(new Color(37, 211, 102));
         l1.setOpaque(true);
         l1.setBorder(new EmptyBorder(15,15,15,10));
         
-        //Add the time of when the message was send
+        // add the time of when the message was send
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         
@@ -273,19 +287,26 @@ public class Server extends JFrame implements ActionListener{
         return p3;
     }
 	
+	// function to generate client format text
 	public static JPanel clientFormatLabel(String out, ImageIcon icon, ImageIcon dp){
-		JPanel p4 = formatLabel(out); //Make a new panel for the message
+		// make a new panel for the message
+		JPanel p4 = formatLabel(out); 
 		JPanel p5 = new JPanel();
+		
+		// panel attribute displayed vertically 
         p5.setLayout(new BoxLayout(p5, BoxLayout.Y_AXIS));
         
+        // add image above the chat box 
 		JLabel labelClientImg = new JLabel(icon); 
 		
+		// action when the image clicked
 		labelClientImg.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new DisplayPictureGUI(dp, f1.getLocation(), p1.getBackground());
 			}
 		});
 		
+		// add all panel to chat box panel
         p5.add(labelClientImg);
         p5.add(p4);
         
@@ -301,10 +322,10 @@ public class Server extends JFrame implements ActionListener{
 		
 		String msgin = "";
 		try {
-			skt = new ServerSocket(1000);//Give the socket a random number between 0 and 65535
+			skt = new ServerSocket(1000);// give the socket a random number between 0 and 65535
 			
 			while(true){
-				s = skt.accept();//Accept the connection with the client and make a new socket
+				s = skt.accept();// accept the connection with the client and make a new socket
 
 				din = new DataInputStream(s.getInputStream());
 				dout = new DataOutputStream(s.getOutputStream());
@@ -313,25 +334,25 @@ public class Server extends JFrame implements ActionListener{
 				while(true){
 					area.setLayout(new BorderLayout());   	
 					
-					msgin = din.readUTF();//msgin => the Client message
+					msgin = din.readUTF();// msgin => the Client message
 					
 					JPanel p2 = clientFormatLabel(msgin, cImg.getClientIcon(), cImg.getClientDP()); //Make a new panel for the message
                     JPanel left = new JPanel(new BorderLayout());
                     
                     
-            		left.add(p2, BorderLayout.LINE_START); //So the messages appear at the left side of the screen
+            		left.add(p2, BorderLayout.LINE_START); // so the messages appear at the left side of the screen
 
                     vertical.add(left);
-                    vertical.add(Box.createVerticalStrut(15)); //Add a small space between the messages
+                    vertical.add(Box.createVerticalStrut(15)); // add a small space between the messages
                     area.add(vertical, BorderLayout.PAGE_START);
                     
     	            try {
-    					Thread.sleep(1000);//Sleep for 1000 milliseconds => 1 second
+    					Thread.sleep(1000);// sleep for 1000 milliseconds => 1 second
     				} catch (InterruptedException e) {
     					// TODO Auto-generated catch block
     					e.printStackTrace();
     				}
-    	            //After a second passes, then show the message to the Client
+    	            // after a second passes, then show the message to the Client
                     f1.validate();
 				}
 			}
