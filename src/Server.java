@@ -205,7 +205,6 @@ public class Server extends JFrame implements ActionListener{
 //		Create a scroll pane
 		JScrollPane pane = new JScrollPane(area);
 		pane.setBounds(5, 75, 440, 570);
-		pane.setFont(new Font("SAN_SERIF", Font.PLAIN, 16));
 		pane.getVerticalScrollBar().setUnitIncrement(14);
 		f1.add(pane);
 		
