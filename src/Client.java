@@ -56,75 +56,92 @@ public class Client extends JFrame implements ActionListener{
 		return clientDP;
 	}
 	
-	// contructor for client image
+	// Constructor for client image
 	public Client(String str) {
-		Image img = new ImageIcon(this.getClass().getResource("/male-modified.png")).getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT);
+		Image img = new ImageIcon(this.getClass().getResource("/zoro.jpg")).getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT);
 		clientDP = new ImageIcon(img);
-		img = new ImageIcon(this.getClass().getResource("/male-modified.png")).getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT);
+		img = new ImageIcon(this.getClass().getResource("/zoro.jpg")).getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 		clientIcon = new ImageIcon(img);
 	}
 	
 	public Client(){
 		
+		// setDefaultCloseOperation() method is used to specify one of several options for the close button.
+		// In this case, we use EXIT_ON_CLOSE -- — Exit the application
 		f1.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 		
+		// Create a new panel
 		p1 = new JPanel();
 		p1.setLayout(null);
 		p1.setBackground(Color.blue);
 		p1.setBounds(0, 0, 450, 70);
 		f1.add(p1);
 		
+		// Take left arrow image
 		Image img = new ImageIcon(this.getClass().getResource("/3.png")).getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 		
+		// Put in on label
 		ImageIcon img1 = new ImageIcon(img);
 		JLabel label = new JLabel(img1);
 		label.setBounds(5, 17, 30, 30);
 		p1.add(label);
 
+//		The Java MouseListener is notified whenever change the state of mouse
+//		In this case, we need to exit when left arrow label is clicked
 		label.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				System.exit(0);
 			}
 		});
 		
-		Image img2 = new ImageIcon(this.getClass().getResource("/male-modified.png")).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT);
+//		Take profile picture image
+		Image img2 = new ImageIcon(this.getClass().getResource("/zoro.jpg")).getImage().getScaledInstance(60, 60, Image.SCALE_DEFAULT);
 		
+//		Put in on label
 		ImageIcon img3 = new ImageIcon(img2);
 		JLabel label2 = new JLabel(img3);
 		label2.setBounds(40, 5, 60, 60);
 		p1.add(label2);
 		
-		// client display picture
-		Image cDP = new ImageIcon(this.getClass().getResource("/male-modified.png")).getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT);
+//		Client display picture
+//		The Java MouseListener is notified whenever change the state of mouse
+//		In this case, it show off the profile picture when we click the label
+		Image cDP = new ImageIcon(this.getClass().getResource("/zoro.jpg")).getImage().getScaledInstance(250, 250, Image.SCALE_DEFAULT);
 		label2.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new DisplayPictureGUI(new ImageIcon(cDP), f1.getLocation(), p1.getBackground());
 			}
 		});
 		
+//		Take video image
 		Image img4 = new ImageIcon(this.getClass().getResource("/video.png")).getImage().getScaledInstance(30, 30, Image.SCALE_DEFAULT);
 		
+//		Put in on label
 		ImageIcon img5 = new ImageIcon(img4);
 		JLabel label5 = new JLabel(img5);
 		label5.setBounds(290, 23,30, 30);
 		p1.add(label5);
 		
+//		Take phone image
 		Image img6 = new ImageIcon(this.getClass().getResource("/phone.png")).getImage().getScaledInstance(35, 30, Image.SCALE_DEFAULT);
 
+//		Put in on label
 		ImageIcon img7 = new ImageIcon(img6);
 		JLabel label6 = new JLabel(img7);
 		label6.setBounds(350, 23, 35, 30);
 		p1.add(label6);
 		
+//		Take menu image
 		Image img8 = new ImageIcon(this.getClass().getResource("/3icon.png")).getImage().getScaledInstance(13, 25, Image.SCALE_DEFAULT);
 
+//		Put it on label
 		ImageIcon img9 = new ImageIcon(img8);
 		JLabel label7 = new JLabel(img9);
 		label7.setBounds(410, 23, 13, 25);
 		p1.add(label7);
 		
 		
-		// action when video icon is clicked
+		//label5, label6, label7 create ExceptionGUI object when it's clicked cause it's still under development
 		label5.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent ae) {
 				new ExceptionGUI(f1.getLocation());
@@ -143,18 +160,21 @@ public class Client extends JFrame implements ActionListener{
 			}
 		});
 		
-		JLabel label3 = new JLabel("Name 2");
+//		Create name label
+		JLabel label3 = new JLabel("Roronoa Zoro");
 		label3.setFont(new Font("SAN_SERIF", Font.BOLD, 18));
 		label3.setForeground(Color.white);
 		label3.setBounds(110, 17, 100, 20);
 		p1.add(label3);
 		
+//		Create typing status label
 		JLabel label4 = new JLabel("Active Now");
 		label4.setFont(new Font("SAN_SERIF", Font.PLAIN, 14));
 		label4.setForeground(Color.white);
 		label4.setBounds(110, 36, 100, 20);
 		p1.add(label4);
 		
+//		Set timer for typing status
 		Timer t = new Timer(1, new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				if(!typing){
@@ -162,32 +182,38 @@ public class Client extends JFrame implements ActionListener{
 				}
 			}
 	    });
-	       
+	    
+		//2 seconds delay so that "typing..." changes to "Active Now", after 2 seconds of no typing 
 	    t.setInitialDelay(2000);
 		
+//		Main panel that shows the messages
 		area = new JPanel();
 		area.setBounds(5, 75, 440, 570);
 		area.setFont(new Font("SAN_SERIF", Font.PLAIN, 16));
 		
+//		Create a scroll pane
 		JScrollPane pane = new JScrollPane(area);
 		pane.setBounds(5, 75, 440, 570);
 		pane.setFont(new Font("SAN_SERIF", Font.PLAIN, 16));
 		pane.getVerticalScrollBar().setUnitIncrement(14);
 		f1.add(pane);
 		
+		//Text fields to write the messages
 		text = new JTextField();
 		text.setBounds(5, 655, 320, 40);
 		text.setFont(new Font("SAN_SERIF", Font.PLAIN, 16));
 		f1.add(text);
 		
 		text.addKeyListener(new KeyAdapter(){
+//			If the user presses a key while in the textField, change the label from "Active Now" to typing 
 	        public void keyPressed(KeyEvent ke){
 	        	label4.setText("typing...");
 		               
 		        t.stop();
 		        typing = true;
 	        }
-		           
+		    
+//	        When a key is released from the user while they are in the textField, start the timer
 	        public void keyReleased(KeyEvent ke){
 	        	typing = false;
 		               
@@ -197,6 +223,7 @@ public class Client extends JFrame implements ActionListener{
 	        }
 		});
 		
+//		Button to send the message
 		button = new JButton("Send");
 		button.setBounds(335, 655, 110, 40);
 		button.setBackground(Color.green.darker());
